@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net-Sentinel Dashboard</title> [cite: 373, 1101]
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #0f0f0f; color: #00ff41; font-family: 'Courier New', monospace; } [cite: 379, 1692]
+        .card { background-color: #1a1a1a; border: 1px solid #00ff41; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,255,65,0.2); } [cite: 380, 1692]
+        .table { color: #00ff41; border-color: #333; } [cite: 381, 1692]
+        .intercepted { color: #ff3e3e; font-weight: bold; border-left: 3px solid #ff3e3e; padding-left: 10px; margin-bottom: 5px; } [cite: 382, 1693]
+        .header-text { text-shadow: 0 0 10px #00ff41; margin-top: 30px; } [cite: 385, 1113]
+    </style>
+</head>
+<body class="container py-5"> [cite: 384, 1112]
+    <h1 class="text-center mb-5 header-text">NET-SENTINEL ANALYZER</h1> [cite: 391, 1705]
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card p-4">
+                <h4 class="mb-3">Vulnerability Scan Results</h4> [cite: 389, 1703]
+                <table class="table table-dark table-hover"> [cite: 390, 1704]
+                    <thead>
+                        <tr>
+                            <th>Port</th>
+                            <th>Service</th>
+                            <th>Version Detected</th>
+                        </tr> [cite: 392, 1706]
+                    </thead>
+                    <tbody>
+                        {% for item in scan_data %} [cite: 394, 1708]
+                        <tr>
+                            <td>{{ item.port }}</td>
+                            <td>{{ item.service }}</td>
+                            <td>{{ item.version }}</td>
+                        </tr> [cite: 395, 1709]
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card p-4">
+                <h4 class="mb-3">Intercepted Credentials</h4> [cite: 434, 1162]
+                <div id="creds-container">
+                    {% for cred in captured_data %} [cite: 436, 1164]
+                    <div class="intercepted">>> {{ cred }}</div> [cite: 437, 1165]
+                    {% else %}
+                    <p class="text-muted">Waiting for network traffic...</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5 text-muted">
+        <small>Developed by Tufan Şahin Düzel - Computer Engineering [cite: 1731]</small>
+    </footer>
+</body>
+</html>
