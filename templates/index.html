@@ -3,60 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Net-Sentinel Dashboard</title> [cite: 373, 1101]
+    <title>Net-Sentinel | Security Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body { background-color: #0f0f0f; color: #00ff41; font-family: 'Courier New', monospace; } [cite: 379, 1692]
-        .card { background-color: #1a1a1a; border: 1px solid #00ff41; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,255,65,0.2); } [cite: 380, 1692]
-        .table { color: #00ff41; border-color: #333; } [cite: 381, 1692]
-        .intercepted { color: #ff3e3e; font-weight: bold; border-left: 3px solid #ff3e3e; padding-left: 10px; margin-bottom: 5px; } [cite: 382, 1693]
-        .header-text { text-shadow: 0 0 10px #00ff41; margin-top: 30px; } [cite: 385, 1113]
+        /* Modern Hacker Aesthetic Theme */
+        body { 
+            background-color: #0d0d0d; 
+            color: #00ff41; 
+            font-family: 'Courier New', monospace; 
+            overflow-x: hidden;
+        }
+        .container { max-width: 1200px; }
+        .card { 
+            background-color: #161616; 
+            border: 1px solid #00ff41; 
+            border-radius: 8px;
+            margin-bottom: 25px; 
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+        }
+        .card-title {
+            border-bottom: 1px solid #00ff41;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .table { color: #00ff41; }
+        .table-dark { background-color: transparent; }
+        .intercepted-row { 
+            color: #ff3131; 
+            font-weight: bold; 
+            border-left: 4px solid #ff3131; 
+            padding: 10px; 
+            background: rgba(255, 49, 49, 0.05);
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+        .header-section {
+            text-align: center;
+            padding: 40px 0;
+            text-shadow: 0 0 15px #00ff41;
+        }
+        .status-indicator {
+            height: 10px;
+            width: 10px;
+            background-color: #00ff41;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        footer { color: #555; font-size: 0.8rem; margin-top: 50px; }
     </style>
 </head>
-<body class="container py-5"> [cite: 384, 1112]
-    <h1 class="text-center mb-5 header-text">NET-SENTINEL ANALYZER</h1> [cite: 391, 1705]
+<body class="container">
+
+    <header class="header-section">
+        <h1 class="display-4 fw-bold">NET-SENTINEL ANALYZER</h1>
+        <p class="lead"><span class="status-indicator"></span>SYSTEM OPERATIONAL | REAL-TIME MONITORING ACTIVE</p>
+    </header>
 
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-lg-7">
             <div class="card p-4">
-                <h4 class="mb-3">Vulnerability Scan Results</h4> [cite: 389, 1703]
-                <table class="table table-dark table-hover"> [cite: 390, 1704]
-                    <thead>
-                        <tr>
-                            <th>Port</th>
-                            <th>Service</th>
-                            <th>Version Detected</th>
-                        </tr> [cite: 392, 1706]
-                    </thead>
-                    <tbody>
-                        {% for item in scan_data %} [cite: 394, 1708]
-                        <tr>
-                            <td>{{ item.port }}</td>
-                            <td>{{ item.service }}</td>
-                            <td>{{ item.version }}</td>
-                        </tr> [cite: 395, 1709]
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <h3 class="card-title h5">Vulnerability Scan Results</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Port/Protocol</th>
+                                <th>Service</th>
+                                <th>Version Information</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in scan_data %}
+                            <tr>
+                                <td class="text-info">{{ item.port }}</td>
+                                <td>{{ item.service }}</td>
+                                <td><span class="badge bg-outline-success border border-success text-success">{{ item.version }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No scan data available. Start analysis to populate results.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-lg-5">
             <div class="card p-4">
-                <h4 class="mb-3">Intercepted Credentials</h4> [cite: 434, 1162]
-                <div id="creds-container">
-                    {% for cred in captured_data %} [cite: 436, 1164]
-                    <div class="intercepted">>> {{ cred }}</div> [cite: 437, 1165]
+                <h3 class="card-title h5 text-danger">Intercepted Credentials</h3>
+                <div id="capture-feed" style="max-height: 400px; overflow-y: auto;">
+                    {% for cred in captured_data %}
+                    <div class="intercepted-row">
+                        <small class="text-white-50 d-block">SENSITIVE DATA EXTRACTED:</small>
+                        {{ cred }}
+                    </div>
                     {% else %}
-                    <p class="text-muted">Waiting for network traffic...</p>
+                    <div class="text-center py-5">
+                        <p class="text-muted">Waiting for unencrypted traffic...</p>
+                        <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-center mt-5 text-muted">
-        <small>Developed by Tufan Şahin Düzel - Computer Engineering [cite: 1731]</small>
+    <footer class="text-center pb-4">
+        <hr class="bg-secondary">
+        <p>Project: Net-Sentinel | Automated Security Suite</p>
+        <p>Developed for Educational Purposes & Authorized Testing Only</p>
     </footer>
+
 </body>
 </html>
